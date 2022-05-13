@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "hola004"
+  namespace: "dev"
+  labels:
+    app: "hola004"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "hola004"
+  template:
+    metadata:
+      labels:
+        app: "hola004"
+    spec:
+      containers:
+      - name: "nginx-1"
+        image: "nginx:latest"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "hola004-hpa-yewt"
+  namespace: "dev"
+  labels:
+    app: "hola004"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "hola004"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
